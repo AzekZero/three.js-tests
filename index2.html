@@ -9,60 +9,69 @@
 		</style>
 	</head>
 	<body>
+		<!--three.js has lots of extra files you put in when you need the functionality. Haven't implemented FP controls.-->
 		<script src="js/controls/FirstPersonControls.js"></script>
 		<script src="js/three.min.js"></script>
 		<script>
+			//This section, the scene and camera are created
 			var scene = new THREE.Scene();
-			var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 2000 );
+			var camera = new THREE.PerspectiveCamera( 120, window.innerWidth / window.innerHeight, 1, 2000 );
+			
+			//scene objects and effects are created
 			scene.add( camera );
 			
-			scene.add( new THREE.AmbientLight( 0x404040 ) );
-			
-			light = new THREE.DirectionalLight( 0xffffff );
-				light.position.set( 0, 1, 0 );
+			//light not working
+			var light = new THREE.AmbientLight( 0x404040 );
 				scene.add( light );
-			
+				
+			//this sets the 3d canvas window, you can set the variables in renderer.setSize to have a fixed canvas size
 			var renderer = new THREE.WebGLRenderer();
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
 			
+			//properties for scene objects
 			var geometry = new THREE.BoxGeometry( 100, 100, 100 );
 			var material = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } );
-			var material2 = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } );
+			var material2 = new THREE.MeshBasicMaterial( { color: 0xFFFF00, transparent: true, opacity: 0.4  } );
+			var material3 = new THREE.MeshBasicMaterial({ color: 0x999999, wireframe: true, transparent: true, opacity: 0.85 } )
+			var material4 = new THREE.MeshBasicMaterial({ color: 0x999999, wireframe: true, transparent: true, opacity: 0.85 } )
 
+			
+			//object ids
 			var cube0 = new THREE.Mesh( geometry, material );
-			var cube1 = new THREE.Mesh( geometry, material );
-			var cube2 = new THREE.Mesh( geometry, material );
+			var cube1 = new THREE.Mesh( geometry, material2 );
+			var cube2 = new THREE.Mesh( geometry, material3 );
 			var cube3 = new THREE.Mesh( geometry, material );
+			var edges = new THREE.EdgesHelper( cube0, 0x00ff00 );
+			var wireframe = new THREE.WireframeHelper( cube1, 0x00ff00 );
 			
-			var a = new THREE.Euler( 0, 1, 1.57, 'XYZ' );
 			
-					
+			//objects' initial positioning (you don't mix starting positions w/ animations)
+			cube0.position.set( -200, 200, 200 );
+			cube0.rotation.set( 0,0,45,'XYZ');
 			
-			edges = new THREE.EdgesHelper( cube0, 0x00ff00 );
-			wireframe = new THREE.WireframeHelper( cube1, 0x00ff00 );
+			cube1.position.set( 200, 200, 200 );
+			cube1.rotation.set( 45,0,0,'XYZ');
 			
-			cube0.position.set( -200, 0, 200 );
+			//adds objects to scene (the camera counters)
 			scene.add( cube0 );
 			scene.add( cube1 );
 			scene.add( cube2 );
 			scene.add( cube3 );
 			scene.add( edges );
 			scene.add( wireframe );
-			
 			camera.position.z = 2;
 			cube0.rotationAutoUpdate = true;
 			
+			//rendering, you can add conditions for activation
 			function render() {
 				requestAnimationFrame( render );
-				camera.position.x += 0.5;
 				camera.position.y = 0;
 				camera.position.z = 500;
+				cube0.rotation.z += 0.01;
 
-				cube1.rotation.x = 115;
-				cube1.rotation.y = 115;
-				cube1.position.x = 200;
-				cube1.position.y = 200;
+				cube1.rotation.x += 0.01;
+
 
 				cube2.rotation.x += 0.01;
 				cube2.rotation.y += 0.01;
@@ -81,8 +90,6 @@
 				renderer.render( scene, camera );
 			}
 			render();
-			
-
 		</script>
 	</body>
 </html>
